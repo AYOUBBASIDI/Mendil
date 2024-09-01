@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Management</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script>
+        // Function to check login status and prevent cache
+        function checkLoginStatus() {
+            // Force browser to always load page from server, not cache
+            window.onpageshow = function(event) {
+                if (event.persisted || window.performance && window.performance.navigation.type === 2) {
+                    window.location.reload();
+                }
+            };
+
+            const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+            if (!isLoggedIn || isLoggedIn !== 'true') {
+                // Redirect to login page if not logged in
+                window.location.href = '/login.html'; // Ensure correct path
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', checkLoginStatus);
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="toolbar">
+            <button id="logoutButton"></button>
+            <a href="client.html" class="client-serf"></a>
+            <a href="statistics.html" class="statistics-link"></a>
+        </div>
+        
+        <h1>SOCIETY M*</h1>
+        <h2>Expenses</h2>
+        <form id="expenseForm">
+            <label for="date">Date: التاريخ</label>
+            <input type="date" id="date" name="date" required>
+
+            <label for="type">Type: النوع</label>
+            <select id="type" name="type" required>
+                <option value="">Select an option</option>
+                <option value="Labor">اليد العــــاملة</option>
+                <option value="Building Materials">مواد البنــــاء</option>
+                <option value="Gasoline">البنـــزين</option>
+                <option value="Highway">الطريق السريـــــع</option>
+                <option value="Other">أخــــــرى</option>
+            </select>
+
+            <label for="amount">Montant: المبلغ</label>
+            <input type="number" id="amount" name="amount" step="0.01" required>
+
+            <label for="description">Description: وصــــف</label>
+            <textarea id="description" name="description"></textarea>
+
+            <!-- New Client Selection Field -->
+            <label for="client">Client: العميل</label>
+            <select id="clientSelect" name="client_id" required>
+                <option value="" disabled selected>Select Client</option>
+                <!-- Options will be populated dynamically -->
+            </select>
+
+            <input type="submit" value="✚">
+        </form>
+        
+        <div id="message" class="message"></div>
+     
+       <h2>View expenses عرض المصاريف</h2>
+
+
+   <form id="monthForm">
+    <div class="expenses-container" > 
+            <label for="month">Filter by Month</label>
+            <input type="month" id="month" name="month" value="" />
+            <button type="submit">🔄</button></div>
+   </form>
+    
+        <div class="table-container">
+            <table id="expensesTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Description</th>
+                        <th>Client</th> <!-- New column for client -->
+                        <th></th> <!-- Column for actions like delete -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Expenses will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    
+    </div>
+
+    <script>
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            // Clear login status and cache
+            sessionStorage.removeItem('isLoggedIn');
+            sessionStorage.clear(); // Clear all session data
+            // Redirect to login page
+            window.location.href = '/login.html';
+        });
+    </script>
+    <script src="/scripts/script.js"></script>
+</body>
+</html>

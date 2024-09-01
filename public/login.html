@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="styles/styles.css">
+   
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Login</h1>
+        
+        <form id="loginForm">
+            <label for="login">Username:</label>
+            <input type="text" id="login" name="login" required>
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <input type="submit" value="Login">
+            <p id="errorMessage" class="error-message"></p>
+        </form>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Hardcoded credentials
+            const correctUsername = 'mendil';
+            const correctPassword = 'mendil@2024';
+
+            if (loginForm) {
+                loginForm.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    
+                    // Clear previous error messages
+                    errorMessage.textContent = '';
+
+                    // Get form values
+                    const username = document.getElementById('login').value;
+                    const password = document.getElementById('password').value;
+
+                    // Validate input
+                    if (!username || !password) {
+                        errorMessage.textContent = 'Please fill in both username and password.';
+                        return;
+                    }
+
+                    // Check credentials
+                    if (username === correctUsername && password === correctPassword) {
+                        // Set session storage and redirect
+                        sessionStorage.setItem('isLoggedIn', 'true');
+                        window.location.href = '/index.html'; // Adjust this path as needed
+                    } else {
+                        errorMessage.textContent = 'Invalid username or password.';
+                    }
+                });
+            }
+        });
+    </script>
+   
+</body>
+</html>

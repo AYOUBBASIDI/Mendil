@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics</title>
+    <link rel="stylesheet" href="styles/styles3.css">
+    
+    <script>
+        // Function to check login status and prevent cache
+        function checkLoginStatus() {
+            // Force browser to always load page from server, not cache
+            window.onpageshow = function(event) {
+                if (event.persisted || window.performance && window.performance.navigation.type === 2) {
+                    window.location.reload();
+                }
+            };
+
+            const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+            if (!isLoggedIn || isLoggedIn !== 'true') {
+                // Redirect to login page if not logged in
+                window.location.href = '/login.html'; // Ensure correct path
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', checkLoginStatus);
+    </script>
+</head>
+<body>
+
+</div>
+    <div class="container">
+        <div class="toolbar">
+            <button id="logoutButton"></button>
+            <a href="index.html" class="expense_link"></a>
+            <a href="client.html" class="client-serf"></a>
+        </div>
+
+        <h1>Statistics</h1>
+        <form id="statsForm">
+            <div class="form-container">
+                <!-- New Client Selection Field -->
+                <label for="client">Client: العميل</label>
+                <select id="clientSelect" name="client_id">
+                    <option value="" disabled selected>Select Client</option>
+                    <!-- Options will be populated dynamically -->
+                </select>
+
+                <label for="month">Month:</label>
+                <input type="month" id="month" name="month" />
+
+                <button type="submit">Filter</button>
+            </div>
+            <div class="table-container">
+                <table id="clientTable">
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Budget</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientTableBody">
+                        <!-- Client data will be injected here -->
+                    </tbody>
+                </table>
+                
+                <table id="expensesTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody id="expensesTableBody">
+                        <!-- Expenses data will be injected here -->
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Total Expenses MAD</th>
+                            <th id="totalExpenses" class="number">0</th>
+                        </tr>
+                        <tr>
+                            <th>Gain MAD</th>
+                            <th id="gain" class="total_gain">0</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </form>
+    </div>
+    <script>
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            // Clear login status and cache
+            sessionStorage.removeItem('isLoggedIn');
+            sessionStorage.clear(); // Clear all session data
+            // Redirect to login page
+            window.location.href = '/login.html';
+        });
+    </script>
+    
+    <script src="/scripts/statistics.js"></script>
+</body>
+
+</html>

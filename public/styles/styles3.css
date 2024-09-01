@@ -1,0 +1,216 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 80%;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    color: #4a90e2;
+    text-align :center;
+}
+
+
+/* Form Container */
+.form-container {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fafafa;
+}
+
+.form-container label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.form-container input {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-container button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4a90e2;
+    color: #fff;
+    cursor: pointer;
+}
+
+.form-container button:hover {
+    background-color: #357abd;
+}
+
+/* Clients Container */
+.table-container {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fafafa;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-container table, .table-container th, .table-container td {
+    border: 1px solid #ddd;
+}
+
+.table-container th, .table-container td {
+    padding: 12px;
+    text-align: left;
+}
+
+.table-container tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.table-container tr:hover {
+    background-color: #f1f1f1;
+}
+.table-container th {
+    background-color: #f4f4f9;
+    color: #000000;
+}
+
+.table-container td.total_budget  {
+    background-color: #f4f4f9;
+    color: #0e2177;
+    font-weight: bolder;
+}
+
+.table-container tfoot th.number  {
+    background-color: #f4f4f9;
+    color: #ff0000;
+}
+
+.table-container tfoot th.total_gain  {
+    background-color: #f4f4f9;
+    color: #045415;
+}
+
+/* Action Buttons */
+.table-container .action-buttons {
+    margin-top: 10px;
+}
+
+.table-container button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: large;
+    font-weight: bolder;
+}
+
+.table-container button.update {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.table-container button.update:hover {
+    background-color: #0056b3;
+}
+
+.table-container button.delete {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.table-container button.delete:hover {
+    background-color: #c82333;
+}
+
+
+.toolbar {
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Align items vertically */
+    justify-content: space-between; /* Space out the items */
+    background-color: #f5f5f5; /* Light background color */
+    padding: 10px 20px; /* Padding for space around items */
+    border: 1px solid #ddd; /* Border around the toolbar */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Button styles with icon */
+#logoutButton {
+    width: 40px; /* Set width for icon */
+    height: 40px; /* Set height for icon */
+    background: url('logout_icon.png') no-repeat center center; /* Default icon */
+    background-size: contain; /* Resize to fit */
+    border: none; /* Remove border */
+    cursor: pointer; /* Pointer cursor */
+    transition: background-image 0.3s ease; /* Smooth hover transition */
+}
+
+/* Hover effect for button */
+#logoutButton:hover {
+    background: url('logout_icon_hover.png') no-repeat center center; /* Hover icon */
+    background-size: contain; /* Resize to fit */
+}
+
+/* Link styles with icon */
+.expense_link {
+    width: 40px; /* Set width for icon */
+    height: 40px; /* Set height for icon */
+    background: url('expense_icon.png') no-repeat center center; /* Default icon */
+    background-size: contain; /* Resize to fit */
+    display: block; /* Make it block for proper width/height */
+    text-decoration: none; /* Remove underline */
+    transition: background-image 0.3s ease; /* Smooth hover transition */
+}
+
+/* Hover effect for link */
+.expense_link:hover {
+    background: url('expense_icon_hover.png') no-repeat center center; /* Hover icon */
+    background-size: contain; /* Resize to fit */
+}
+
+.statistics-link {
+    width: 39px; /* Set width for icon */
+    height: 39px; /* Set height for icon */
+    background: url('statistic_icon.png') no-repeat center center; /* Default icon */
+    background-size: contain; /* Resize to fit */
+    display: block; /* Make it block for proper width/height */
+    text-decoration: none; /* Remove underline */
+    transition: background-image 0.3s ease; /* Smooth hover transition */
+}
+.statistics-link:hover {
+    background: url('statistic_icon_hover.png') no-repeat center center; /* Hover icon */
+    background-size: contain; /* Resize to fit */
+}
+
+/* Link styles with icon */
+.client-serf {
+    width: 42px; /* Set width for icon */
+    height: 42px; /* Set height for icon */
+    background: url('client_icon.png') no-repeat center center; /* Default icon */
+    background-size: contain; /* Resize to fit */
+    display: block; /* Make it block for proper width/height */
+    text-decoration: none; /* Remove underline */
+    transition: background-image 0.3s ease; /* Smooth hover transition */
+}
+
+/* Hover effect for link */
+.client-serf:hover {
+    background: url('client_icon_hover.png') no-repeat center center; /* Hover icon */
+    background-size: contain; /* Resize to fit */
+}

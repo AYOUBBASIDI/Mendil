@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Management</title>
+    <link rel="stylesheet" href="styles/styles2.css">
+    <script>
+        // Function to check login status and prevent cache
+        function checkLoginStatus() {
+            // Force browser to always load page from server, not cache
+            window.onpageshow = function(event) {
+                if (event.persisted || window.performance && window.performance.navigation.type === 2) {
+                    window.location.reload();
+                }
+            };
+
+            const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+            if (!isLoggedIn || isLoggedIn !== 'true') {
+                // Redirect to login page if not logged in
+                window.location.href = '/login.html'; // Ensure correct path
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', checkLoginStatus);
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="toolbar">
+            <button id="logoutButton"></button>
+            <a href="index.html" class="expense_link"></a>
+            <a href="statistics.html" class="statistics-link"></a>
+        </div>
+        
+
+        <div class="form-container">
+            <h1>Clients</h1>
+            <h2>Add New Client</h2>
+            <form id="clientForm">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+                
+                <label for="budget">Budget:</label>
+                <input type="number" id="budget" name="budget" step="0.01" required>
+                
+                <button type="submit">Add Client</button>
+            </form>
+        </div>
+
+        <div class="clients-container">
+            <h2>View Clients</h2>
+            <button id="loadClients">Load Clients ⟲</button>
+            <table id="clientsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Budget</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Client rows will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            // Clear login status and cache
+            sessionStorage.removeItem('isLoggedIn');
+            sessionStorage.clear(); // Clear all session data
+            // Redirect to login page
+            window.location.href = '/login.html';
+        });
+    </script>
+    <script src="/scripts/client.js"></script>
+</body>
+</html>
