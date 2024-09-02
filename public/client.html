@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client Management</title>
-    <link rel="stylesheet" href="styles/styles2.css">
+    <link rel="stylesheet" href="./styles/styles2.css">
     <script>
         // Function to check login status and prevent cache
         function checkLoginStatus() {
@@ -18,7 +18,7 @@
             const isLoggedIn = sessionStorage.getItem('isLoggedIn');
             if (!isLoggedIn || isLoggedIn !== 'true') {
                 // Redirect to login page if not logged in
-                window.location.href = '/login.html'; // Ensure correct path
+                window.location.href = './login.html'; // Ensure correct path
             }
         }
 
@@ -29,8 +29,8 @@
     <div class="container">
         <div class="toolbar">
             <button id="logoutButton"></button>
-            <a href="index.html" class="expense_link"></a>
-            <a href="statistics.html" class="statistics-link"></a>
+            <a href="./index.html" class="expense_link"></a>
+            <a href="./statistics.html" class="statistics-link"></a>
         </div>
         
 
@@ -72,9 +72,9 @@
             sessionStorage.removeItem('isLoggedIn');
             sessionStorage.clear(); // Clear all session data
             // Redirect to login page
-            window.location.href = '/login.html';
+            window.location.href = './login.html';
         });
     </script>
-    <script src="/scripts/client.js"></script>
+    <script src="./scripts/client.js"></script>
 </body>
 </html>

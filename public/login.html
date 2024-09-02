@@ -52,7 +52,7 @@
                     if (username === correctUsername && password === correctPassword) {
                         // Set session storage and redirect
                         sessionStorage.setItem('isLoggedIn', 'true');
-                        window.location.href = '/index.html'; // Adjust this path as needed
+                        window.location.href = './index.html'; // Adjust this path as needed
                     } else {
                         errorMessage.textContent = 'Invalid username or password.';
                     }
