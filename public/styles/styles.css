@@ -164,6 +164,23 @@ tr:hover {
     transition: background-image 0.3s ease; /* Smooth hover transition */
 }
 
+/* Link styles with icon */
+.expense_link {
+    width: 40px; /* Set width for icon */
+    height: 40px; /* Set height for icon */
+    background: url('expense_icon.png') no-repeat center center; /* Default icon */
+    background-size: contain; /* Resize to fit */
+    display: block; /* Make it block for proper width/height */
+    text-decoration: none; /* Remove underline */
+    transition: background-image 0.3s ease; /* Smooth hover transition */
+}
+
+/* Hover effect for link */
+.expense_link:hover {
+    background: url('expense_icon_hover.png') no-repeat center center; /* Hover icon */
+    background-size: contain; /* Resize to fit */
+}
+
 /* Hover effect for link */
 .client-serf:hover {
     background: url('client_icon_hover.png') no-repeat center center; /* Hover icon */

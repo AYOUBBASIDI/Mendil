@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     const clientForm = document.getElementById('clientForm');
-    const loadClientsButton = document.getElementById('loadClients');
     const clientsTableBody = document.getElementById('clientsTable').getElementsByTagName('tbody')[0];
 
     clientForm.addEventListener('submit', (event) => {
@@ -36,8 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    loadClientsButton.addEventListener('click', loadClients);
-
+    loadClients()
     function loadClients() {
         fetch('/api/clients')
         .then(response => {
@@ -50,9 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
             clientsTableBody.innerHTML = ''; // Clear existing rows
             clients.forEach(client => {
                 const row = clientsTableBody.insertRow();
-                row.insertCell(0).textContent = client.id;
-                row.insertCell(1).textContent = client.name;
-                row.insertCell(2).textContent = client.budget.toFixed(2);
+                // row.insertCell(0).textContent = client.id;
+                row.insertCell(0).textContent = client.name;
+                row.insertCell(1).textContent = client.budget.toFixed(2);
                 
                 // Create Update button
                 const updateButton = document.createElement('button');
@@ -62,10 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Create Delete button
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Delete';
-                deleteButton.addEventListener('click', () => deleteClient(client.id));
+                deleteButton.addEventListener('click', () => deleteClient(client._id));
                 
                 // Append buttons to the row
-                const actionsCell = row.insertCell(3);
+                const actionsCell = row.insertCell(2);
                 actionsCell.appendChild(updateButton);
                 actionsCell.appendChild(deleteButton);
             });
@@ -98,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const budget = prompt('Enter new budget:', client.budget);
 
         if (name && budget !== null) {
-            fetch(`/api/clients/${client.id}`, {
+            fetch(`/api/clients/${client._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

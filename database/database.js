@@ -1,40 +1,16 @@
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./mydatabase.db', (err) => {
-    if (err) {
-        console.error('Error opening database:', err.message);
-    } else {
-        console.log('Connected to the SQLite database.');
+const mongoose = require('mongoose');
 
-        // Ensure the 'expenses' table exists with the new structure
-        db.run(`CREATE TABLE IF NOT EXISTS expenses (
-            id INTEGER PRIMARY KEY,
-            date TEXT,
-            type TEXT,
-            amount REAL,
-            description TEXT,
-            client_id INTEGER,
-            client_name TEXT
-        )`, (err) => {
-            if (err) {
-                console.error('Error creating expenses table:', err.message);
-            } else {
-                console.log('Expenses table is ready.');
-            }
-        });
+// Replace with your MongoDB Cloud connection string
+const uri = 'mongodb+srv://ayoubbasidi1:hxwRbjXlfWswHN15@cluster0.4zaqwio.mongodb.net/mendil';
 
-        // Ensure the 'clients' table exists
-        db.run(`CREATE TABLE IF NOT EXISTS clients (
-            id INTEGER PRIMARY KEY,
-            name TEXT,
-            budget REAL
-        )`, (err) => {
-            if (err) {
-                console.error('Error creating clients table:', err.message);
-            } else {
-                console.log('Clients table is ready.');
-            }
-        });
-    }
-});
+// Connect to MongoDB
+mongoose.connect(uri)
+    .then(() => {
+        console.log('Connected to MongoDB.');
+    })
+    .catch((err) => {
+        console.error('Error connecting to MongoDB:', err.message);
+    });
 
-module.exports = db;
+// Export the connection
+module.exports = mongoose;

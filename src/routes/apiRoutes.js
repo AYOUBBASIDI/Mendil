@@ -1,219 +1,181 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../../database/database'); // or '../../database' if database.js is directly inside database folder
 
+// Import Models
+const Expense = require('../../models/Expense'); // Expense model
+const Client = require('../../models/Client'); // Client model
 
-// Example route to get expenses
-router.get('/expenses', (req, res) => {
+router.get('/expenses', async (req, res) => {
     const month = req.query.month || getCurrentMonth();
-    const sql = 'SELECT * FROM expenses WHERE strftime("%Y-%m", date) = ?';
-    db.all(sql, [month], (err, rows) => {
-        if (err) {
-            res.status(500).json({ error: err.message });
-            return;
-        }
-        res.json(rows);
-    });
+    const startDate = new Date(`${month}-01`);
+    const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
+
+    try {
+        const expenses = await Expense.find({
+            date: { $gte: startDate, $lte: endDate }
+        });
+        res.json(expenses);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
-function getCurrentMonth() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based
-    return `${year}-${month}`;
-}
 
-// Route to add an expense
-router.post('/expenses', (req, res) => {
-    const { date, type, amount, description, client_id,client_name} = req.body;
-    console.log(req.body);  // Log to check if all fields are present
+router.post('/expenses', async (req, res) => {
+    const { date, type, amount, description, client_id, client_name } = req.body;
 
-    // Ensure all required fields are provided
     if (!date || !type || !amount || !client_id || !client_name) {
         return res.status(400).json({ error: 'Please provide all required fields: date, type, amount, client_id, and client_name.' });
     }
 
-    // Insert the expense into the database
-    db.run('INSERT INTO expenses (date, type, amount, description, client_id, client_name) VALUES (?, ?, ?, ?, ?, ?)',
-        [date, type, amount, description, client_id, client_name],
-        function(err) {
-            if (err) {
-                return res.status(500).json({ error: err.message });
-            }
-            res.status(201).json({ id: this.lastID });
+    try {
+        const expense = new Expense({
+            date,
+            type,
+            amount,
+            description,
+            client_id,
+            client_name
         });
+
+        const savedExpense = await expense.save();
+        res.status(201).json(savedExpense);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 
-
-// Route to delete an expense by ID
-router.delete('/expenses/:id', (req, res) => {
+router.delete('/expenses/:id', async (req, res) => {
     const expenseId = req.params.id;
-    db.run('DELETE FROM expenses WHERE id = ?', [expenseId], function(err) {
-        if (err) {
-            res.status(500).json({ error: err.message });
-            return;
-        }
-        if (this.changes === 0) {
-            res.status(404).json({ error: 'Expense not found' });
-            return;
+
+    try {
+        const result = await Expense.findByIdAndDelete(expenseId);
+        if (!result) {
+            return res.status(404).json({ error: 'Expense not found' });
         }
         res.status(200).json({ message: 'Expense deleted successfully' });
-    });
-});
-
-// Route to update an expense
-router.put('/expenses/:id', (req, res) => {
-    const id = req.params.id;
-    const { date, type, amount, description, client_id, client_name } = req.body;
-
-    const sql = 'UPDATE expenses SET date = ?, type = ?, amount = ?, description = ?, client_id = ?, client_name = ? WHERE id = ?';
-    db.run(sql, [date, type, amount, description, client_id, client_name, id], function(err) {
-        if (err) {
-            res.status(500).json({ error: err.message });
-            return;
-        }
-        if (this.changes === 0) {
-            res.status(404).json({ error: 'Expense not found' });
-            return;
-        }
-        res.json({ changes: this.changes });
-    });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 
-// Route to get all clients
-router.get('/clients', (req, res) => {
-    db.all('SELECT * FROM clients', [], (err, rows) => {
-        if (err) {
-            res.status(500).json({ error: err.message });
-            return;
-        }
-        res.json(rows);
-    });
+router.get('/clients', async (req, res) => {
+    try {
+        const clients = await Client.find();
+        res.json(clients);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
-// Route to add a client
-router.post('/clients', (req, res) => {
-    const { name, budget } = req.body;
-    db.run('INSERT INTO clients (name, budget) VALUES (?, ?)',
-        [name, budget],
-        function(err) {
-            if (err) {
-                res.status(500).json({ error: err.message });
-                return;
-            }
-            res.status(201).json({ id: this.lastID });
-        });
-});
 
-// Route to delete a client by ID
-router.delete('/clients/:id', (req, res) => {
-    const clientId = req.params.id;
-    db.run('DELETE FROM clients WHERE id = ?', [clientId], function(err) {
-        if (err) {
-            res.status(500).json({ error: err.message });
-            return;
-        }
-        if (this.changes === 0) {
-            res.status(404).json({ error: 'Client not found' });
-            return;
-        }
-        res.status(200).json({ message: 'Client deleted successfully' });
-    });
-});
-
-// Route to update a client and related expenses
-router.put('/clients/:id', (req, res) => {
-    const id = req.params.id;
+router.post('/clients', async (req, res) => {
     const { name, budget } = req.body;
 
-    // Start a transaction
-    db.serialize(() => {
-        // Begin the transaction
-        db.run('BEGIN TRANSACTION');
-
-        // Update the client information in the clients table
-        const updateClientSql = 'UPDATE clients SET name = ?, budget = ? WHERE id = ?';
-        
-        // Update related expenses in the expenses table (only updating client_name)
-        const updateExpensesSql = 'UPDATE expenses SET client_name = ? WHERE client_id = ?';
-
-        // Combine both updates in one execution
-        db.run(updateClientSql, [name, budget, id], function(err) {
-            if (err) {
-                db.run('ROLLBACK'); // Rollback the transaction on error
-                res.status(500).json({ error: err.message });
-                return;
-            }
-
-            if (this.changes === 0) {
-                db.run('ROLLBACK'); // Rollback the transaction if no client is found
-                res.status(404).json({ error: 'Client not found' });
-                return;
-            }
-
-            // Proceed to update the expenses if client update is successful
-            db.run(updateExpensesSql, [name, id], function(err) {
-                if (err) {
-                    db.run('ROLLBACK'); // Rollback the transaction on error
-                    res.status(500).json({ error: err.message });
-                    return;
-                }
-
-                // Commit the transaction if both updates succeed
-                db.run('COMMIT', () => {
-                    res.json({ clientChanges: 1, expenseChanges: this.changes });
-                });
-            });
-        });
-    });
+    try {
+        const client = new Client({ name, budget });
+        const savedClient = await client.save();
+        res.status(201).json(savedClient);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 
-
-// Route to get a single client by ID
-router.get('/clients/:id', (req, res) => {
+router.delete('/clients/:id', async (req, res) => {
     const clientId = req.params.id;
-    db.all('SELECT id, name, budget FROM clients WHERE id = ?', [clientId], (err, results) => {
-        if (err) {
-            console.error('Database query error:', err);
-            return res.status(500).json({ error: 'Internal server error' });
-        }
-        
-        if (results.length === 0) {
-            console.log(`No client found with ID: ${clientId}`);
+
+    try {
+        const result = await Client.findByIdAndDelete(clientId);
+        if (!result) {
             return res.status(404).json({ error: 'Client not found' });
         }
- 
-        res.json(results[0]);
-    });
+        res.status(200).json({ message: 'Client deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 
-// Route to get all columns from the expenses table by client ID
-router.get('/expenses/:clientId', (req, res) => {
+router.put('/clients/:id', async (req, res) => {
+    const id = req.params.id;
+    const { name, budget } = req.body;
+
+    try {
+        const updatedClient = await Client.findByIdAndUpdate(
+            id,
+            { name, budget },
+            { new: true }
+        );
+
+        if (!updatedClient) {
+            return res.status(404).json({ error: 'Client not found' });
+        }
+
+        // Update related expenses
+        const updatedExpenses = await Expense.updateMany(
+            { client_id: id },
+            { client_name: name }
+        );
+
+        res.json({ client: updatedClient, updatedExpenses });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+router.get('/clients/:id', async (req, res) => {
+    const clientId = req.params.id;
+
+    try {
+        const client = await Client.findById(clientId);
+        if (!client) {
+            return res.status(404).json({ error: 'Client not found' });
+        }
+        res.json(client);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+router.get('/expenses/:clientId', async (req, res) => {
     const clientId = req.params.clientId;
 
-    // Log the request for debugging purposes
-    //console.log(`Fetching expenses for client ID: ${clientId}`);
-
-    db.all('SELECT * FROM expenses WHERE client_id = ?', [clientId], (err, results) => {
-        if (err) {
-            console.error('Database query error:', err);
-            return res.status(500).json({ error: 'Internal server error' });
-        }
-
-        if (results.length === 0) {
-            console.log(`No expenses found for client ID: ${clientId}`);
+    try {
+        const expenses = await Expense.find({ client_id: clientId });
+        if (expenses.length === 0) {
             return res.status(404).json({ error: 'No expenses found for the given client ID' });
         }
-
-        // Log the results for debugging purposes
-       // console.log(`Recovered expenses for client ID: ${clientId}`, results);
-
-        res.json(results);
-    });
+        res.json(expenses);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
+
+router.put('/expenses/:id', async (req, res) => {
+    const expenseId = req.params.id;
+    const { date, type, amount, description, client_id, client_name } = req.body;
+
+    try {
+        // Find the expense by ID and update with the new data
+        const updatedExpense = await Expense.findByIdAndUpdate(
+            expenseId,
+            { date, type, amount, description, client_id, client_name },
+            { new: true, runValidators: true } // Options: `new: true` returns the updated document, `runValidators` applies schema validation
+        );
+
+        if (!updatedExpense) {
+            return res.status(404).json({ error: 'Expense not found' });
+        }
+
+        res.json(updatedExpense);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 
 module.exports = router;

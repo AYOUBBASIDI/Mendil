@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     clients.forEach(client => {
                         const option = document.createElement('option');
-                        option.value = client.id; // Client ID
+                        option.value = client._id; // Client ID
                         option.textContent = client.name; // Client name
                         clientSelect.appendChild(option);
                     });

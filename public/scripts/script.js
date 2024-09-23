@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Append each client as an option
                     clients.forEach(client => {
                         const option = document.createElement('option');
-                        option.value = client.id; // Client ID
+                        option.value = client._id; // Client ID
                         option.textContent = client.name; // Client name
                         clientSelect.appendChild(option);
                     });
@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 clientSelect.value = expense.client; // Set the selected client ID
             }
 
-            currentExpenseId = expense.id; // Set the ID of the expense to be updated
+            currentExpenseId = expense._id; // Set the ID of the expense to be updated
 
             if (updateButton) {
                 updateButton.style.display = 'inline'; // Show the update button
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             const updateButton = document.createElement('button');
                             updateButton.textContent = '⚙️';
                             updateButton.className = 'update-button'; // Apply styling class
-                            updateButton.dataset.id = expense.id; // Store the expense ID
+                            updateButton.dataset.id = expense._id; // Store the expense ID
                             updateButton.addEventListener('click', () => {
                                 // Trigger update functionality
                                 handleUpdate(expense);
@@ -236,10 +236,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             const deleteButton = document.createElement('button');
                             deleteButton.textContent = '❌';
                             deleteButton.className = 'delete-button'; // Apply styling class
-                            deleteButton.dataset.id = expense.id; // Store the expense ID
+                            deleteButton.dataset.id = expense._id; // Store the expense ID
                             deleteButton.addEventListener('click', () => {
                                 // Trigger delete functionality
-                                deleteExpense(expense.id);
+                                deleteExpense(expense._id);
                             });
 
                             // Append buttons to the row

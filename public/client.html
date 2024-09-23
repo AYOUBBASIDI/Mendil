@@ -30,14 +30,15 @@
         <div class="toolbar">
             <button id="logoutButton"></button>
             <a href="./index.html" class="expense_link"></a>
+            <a href="./client.html" class="client-serf"></a>
             <a href="./statistics.html" class="statistics-link"></a>
         </div>
         
 
-        <div class="form-container">
-            <h1>Clients</h1>
-            <h2>Add New Client</h2>
-            <form id="clientForm">
+        <h1>Clients</h1>
+        <h2>Add New Client</h2>
+        <form id="clientForm">
+                <div class="form-container">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" required>
                 
@@ -45,16 +46,14 @@
                 <input type="number" id="budget" name="budget" step="0.01" required>
                 
                 <button type="submit">Add Client</button>
+            </div>
             </form>
-        </div>
 
         <div class="clients-container">
             <h2>View Clients</h2>
-            <button id="loadClients">Load Clients ⟲</button>
             <table id="clientsTable">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Name</th>
                         <th>Budget</th>
                         <th>Actions</th>
