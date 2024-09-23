@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // Replace with your MongoDB Cloud connection string
-const uri = 'mongodb+srv://ayoubbasidi1:hxwRbjXlfWswHN15@cluster0.4zaqwio.mongodb.net/mendil';
+const uri = process.env.MONGO_URI;
 
 // Connect to MongoDB
 mongoose.connect(uri)
